@@ -1,41 +1,27 @@
 {
   "name": "alfred-color-converter",
-  "version": "0.0.11",
-  "packageManager": "pnpm@8.5.0",
-  "description": "💻 An Alfred Workflows for color conversion.",
-  "repository": "https://github.com/toFrankie/alfred-color-converter.git",
-  "homepage": "https://github.com/toFrankie/alfred-color-converter.git#readme",
-  "bugs": "https://github.com/toFrankie/alfred-color-converter/issues",
+  "type": "module",
+  "version": "1.0.0",
+  "packageManager": "pnpm@10.32.0",
+  "description": "💻 An Alfred workflow for color conversion",
   "author": {
     "name": "Frankie",
     "email": "1426203851@qq.com",
-    "url": "https://github.com/toFrankie/alfred-color-converter.git"
+    "url": "https://github.com/tofrankie"
   },
   "license": "MIT",
-  "engines": {
-    "node": ">=12"
+  "homepage": "https://github.com/tofrankie/alfred-color-converter",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tofrankie/alfred-color-converter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tofrankie/alfred-color-converter/issues"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
-  "scripts": {
-    "prepublish": "run-s lint build",
-    "build": "run-s build:js build:alfred",
-    "build:js": "rollup -c",
-    "build:alfred": "node scripts/build.js",
-    "lint": "run-s eslint:fix prettier:fix",
-    "eslint:fix": "eslint . --fix --cache",
-    "prettier:fix": "prettier './**/*.{json,js}' --write --cache"
-  },
-  "bin": {
-    "alfred-color-converter-import": "bin/install.sh"
-  },
-  "files": [
-    "bin",
-    "alfred-color-converter.alfredworkflow",
-    "CHANGELOG.md"
-  ],
   "keywords": [
     "alfred",
     "workflow",
@@ -46,23 +32,43 @@
     "convert",
     "converter"
   ],
+  "bin": {
+    "alfred-color-converter-import": "bin/install.sh"
+  },
+  "files": [
+    "CHANGELOG.md",
+    "alfred-color-converter.alfredworkflow",
+    "bin"
+  ],
+  "engines": {
+    "node": ">=12"
+  },
+  "scripts": {
+    "prepublish": "run-s lint build",
+    "build": "run-s build:js build:alfred",
+    "build:js": "rollup -c",
+    "build:alfred": "node scripts/build.js",
+    "lint": "run-s eslint:fix prettier:fix",
+    "eslint:fix": "eslint . --fix --cache",
+    "prettier:fix": "prettier './**/*.{json,js}' --write --cache"
+  },
   "dependencies": {
-    "color-convert": "^2.0.1"
+    "color-convert": "^3.1.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.19",
-    "@babel/plugin-transform-runtime": "^7.22.15",
-    "@babel/preset-env": "^7.22.15",
-    "@ifanrx/eslint-config-standard": "^1.2.1",
-    "@ifanrx/prettier-config-standard": "^1.1.1",
-    "@rollup/plugin-babel": "^6.0.3",
-    "@rollup/plugin-commonjs": "^25.0.4",
-    "@rollup/plugin-json": "^6.0.0",
-    "@rollup/plugin-node-resolve": "^15.2.1",
-    "adm-zip": "^0.5.10",
-    "eslint": "^8.49.0",
-    "npm-run-all": "^4.1.5",
+    "@babel/core": "^7.29.0",
+    "@babel/plugin-transform-runtime": "^7.29.0",
+    "@babel/preset-env": "^7.29.2",
+    "@rollup/plugin-babel": "^7.0.0",
+    "@rollup/plugin-commonjs": "^29.0.2",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@tofrankie/eslint": "^0.2.1",
+    "@tofrankie/prettier": "^0.2.0",
+    "adm-zip": "^0.5.17",
+    "eslint": "^10.2.0",
+    "npm-run-all2": "^8.0.4",
     "prettier": "^3.0.3",
-    "rollup": "^3.29.2"
+    "rollup": "^4.60.1"
   }
 }

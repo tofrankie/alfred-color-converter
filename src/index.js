@@ -1,12 +1,43 @@
-const convert = require('color-convert')
+import convert from 'color-convert'
+import { COLOR_TYPE } from './constants/color'
+import namedColor from './constants/color-name'
+import { getHexColorString, getRgbaColorString, getRgbColorString } from './utils/color'
+import { isRgbShortString, rgbLongStringFormat, rgbShortStringFormat } from './utils/rgb'
+import { isRgbaShortString, rgbaLongStringFormat, rgbaShortStringFormat } from './utils/rgba'
 
-const namedColor = require('./constants/color-name')
-const {COLOR_TYPE} = require('./constants/color')
-const {getHexColorString, getRgbColorString, getRgbaColorString} = require('./utils/color')
-const {isRgbShortString, rgbShortStringFormat, rgbLongStringFormat} = require('./utils/rgb')
-const {isRgbaShortString, rgbaShortStringFormat, rgbaLongStringFormat} = require('./utils/rgba')
+main()
 
-const parseColors = inputString => {
+function main() {
+  try {
+    const [_exec, _script, input = ''] = process.argv.map(arg => arg.trim())
+    const colorList = parseColors(input)
+
+    const alfredList = colorList.map(colorInfo => {
+      const { type, from, to } = colorConvert(colorInfo)
+      const iconPath = `./${type === COLOR_TYPE.HEX ? 'hex' : 'rgb'}.png`
+
+      return {
+        arg: to,
+        title: to,
+        subtitle: `Press enter copy to clipboard. ${from} 👉 ${to}`,
+        icon: { path: iconPath },
+      }
+    })
+
+    if (alfredList.length === 0) throw new Error('Invalid color')
+
+    console.log(JSON.stringify({ items: alfredList }))
+  } catch {
+    const invalidItem = {
+      title: 'Not a valid color',
+      subtitle: 'please re-check your input.',
+      arg: 'convert failed',
+    }
+    console.log(JSON.stringify({ items: [invalidItem] }))
+  }
+}
+
+function parseColors(inputString) {
   let str = String(inputString).trim()
   const colorList = []
   let hasNext = false
@@ -14,8 +45,8 @@ const parseColors = inputString => {
   // css named color, see: https://drafts.csswg.org/css-color/#named-colors
   const namedColorRgb = namedColor[str]
   if (namedColorRgb) {
-    colorList.push({type: COLOR_TYPE.RGB, value: namedColorRgb, rawStr: str})
-    colorList.push({type: COLOR_TYPE.HEX, value: convert.rgb.hex(namedColorRgb), rawStr: str})
+    colorList.push({ type: COLOR_TYPE.RGB, value: namedColorRgb, rawStr: str })
+    colorList.push({ type: COLOR_TYPE.HEX, value: convert.rgb.hex(namedColorRgb), rawStr: str })
     return colorList
   }
 
@@ -25,7 +56,7 @@ const parseColors = inputString => {
     // hex color
     const hexColor = getHexColorString(str)
     if (hexColor) {
-      colorList.push({type: COLOR_TYPE.HEX, value: hexColor})
+      colorList.push({ type: COLOR_TYPE.HEX, value: hexColor })
       hasNext = true
     }
     str = str.replace(hexColor, '')
@@ -40,7 +71,7 @@ const parseColors = inputString => {
         formatedColor = rgbLongStringFormat(rgbColor)
       }
 
-      colorList.push({type: COLOR_TYPE.RGB, value: formatedColor})
+      colorList.push({ type: COLOR_TYPE.RGB, value: formatedColor })
       hasNext = true
     }
     str = str.replace(rgbColor, '')
@@ -55,7 +86,7 @@ const parseColors = inputString => {
         formatedColor = rgbaLongStringFormat(rgbaColor)
       }
 
-      colorList.push({type: COLOR_TYPE.RGBA, value: formatedColor})
+      colorList.push({ type: COLOR_TYPE.RGBA, value: formatedColor })
       hasNext = true
     }
     str = str.replace(rgbaColor, '')
@@ -64,9 +95,9 @@ const parseColors = inputString => {
   return colorList
 }
 
-const colorConvert = ({type, value, rawStr}) => {
-  const {HEX, RGB, RGBA} = COLOR_TYPE
-  const result = {type, from: value, to: value}
+function colorConvert({ type, value, rawStr }) {
+  const { HEX, RGB, RGBA } = COLOR_TYPE
+  const result = { type, from: value, to: value }
 
   let newValue = value
   switch (type) {
@@ -95,32 +126,4 @@ const colorConvert = ({type, value, rawStr}) => {
   }
 
   return result
-}
-
-try {
-  const [_exec, _script, input = ''] = process.argv.map(arg => arg.trim())
-  const colorList = parseColors(input)
-
-  const alfredList = colorList.map(colorInfo => {
-    const {type, from, to} = colorConvert(colorInfo)
-    const iconPath = `./${type === COLOR_TYPE.HEX ? 'hex' : 'rgb'}.png`
-
-    return {
-      arg: to,
-      title: to,
-      subtitle: `Press enter copy to clipboard. ${from} 👉 ${to}`,
-      icon: {path: iconPath},
-    }
-  })
-
-  if (alfredList.length === 0) throw new Error('Invalid color')
-
-  console.log(JSON.stringify({items: alfredList}))
-} catch (e) {
-  const invalidItem = {
-    title: `Not a valid color`,
-    subtitle: 'please re-check your input.',
-    arg: 'convert failed',
-  }
-  console.log(JSON.stringify({items: [invalidItem]}))
 }

@@ -1,15 +1,14 @@
-const {RGB_REGEX} = require('../constants/regex')
+import { RGB_REGEX } from '../constants/regex'
+import { between } from './math'
 
-const {between} = require('./math')
+export const isRgbShortString = rgbString => RGB_REGEX.SHORT.test(rgbString)
 
-const isRgbShortString = rgbString => RGB_REGEX.SHORT.test(rgbString)
-
-const isRgbLongString = rgbString => RGB_REGEX.LONG.test(rgbString)
+export const isRgbLongString = rgbString => RGB_REGEX.LONG.test(rgbString)
 
 /**
  * Accepts a string like this 'rgb(N, N, N)' or 'N, N, N'
  */
-const isRgbString = rgbString => {
+export function isRgbString(rgbString) {
   const isShort = isRgbShortString(rgbString)
   const isLong = isRgbLongString(rgbString)
 
@@ -20,7 +19,7 @@ const isRgbString = rgbString => {
 /**
  * Accepts a string like this 'rgb(N, N, N)' or 'N, N, N' with N numeric values between 0 and 255
  */
-const isRgb = rgb => {
+export function isRgb(rgb) {
   if (!isRgbString(rgb)) return false
 
   const isShort = isRgbShortString(rgb)
@@ -33,7 +32,7 @@ const isRgb = rgb => {
 /**
  * Convert 'rgb(N, N, N)' to [N, N, N]
  */
-const rgbLongStringFormat = rgbString => {
+export function rgbLongStringFormat(rgbString) {
   return rgbString
     .replace('rgb', '')
     .replace('(', '')
@@ -45,14 +44,6 @@ const rgbLongStringFormat = rgbString => {
 /**
  * Convert 'N, N, N' to [N, N, N]
  */
-const rgbShortStringFormat = rgbString => {
+export function rgbShortStringFormat(rgbString) {
   return rgbString.split(',').map(n => Number(n.trim()))
-}
-
-module.exports = {
-  isRgbShortString,
-  isRgbLongString,
-  isRgb,
-  rgbLongStringFormat,
-  rgbShortStringFormat,
 }

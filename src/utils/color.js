@@ -1,15 +1,14 @@
-const {HEX_COLOR_REGEX, RGBA_COLOR_REGEX, RGB_COLOR_REGEX} = require('../constants/regex')
+import { HEX_COLOR_REGEX, RGB_COLOR_REGEX, RGBA_COLOR_REGEX } from '../constants/regex'
+import { isRgbLongString, isRgbShortString } from './rgb'
+import { isRgbaLongString, isRgbaShortString } from './rgba'
 
-const {isRgbShortString, isRgbLongString} = require('./rgb')
-const {isRgbaLongString, isRgbaShortString} = require('./rgba')
-
-const getHexColorString = string => {
+export function getHexColorString(string) {
   HEX_COLOR_REGEX.lastIndex = 0
   const matches = HEX_COLOR_REGEX.exec(string)
   return matches ? matches[0] : ''
 }
 
-const getRgbColorString = string => {
+export function getRgbColorString(string) {
   RGB_COLOR_REGEX.lastIndex = 0
   const matches = RGB_COLOR_REGEX.exec(string)
   if (matches) return matches[0]
@@ -18,17 +17,11 @@ const getRgbColorString = string => {
   return ''
 }
 
-const getRgbaColorString = string => {
+export function getRgbaColorString(string) {
   RGBA_COLOR_REGEX.lastIndex = 0
   const matches = RGBA_COLOR_REGEX.exec(string)
   if (matches) return matches[0]
 
   if (isRgbaLongString(string) || isRgbaShortString(string)) return string
   return ''
-}
-
-module.exports = {
-  getHexColorString,
-  getRgbColorString,
-  getRgbaColorString,
 }

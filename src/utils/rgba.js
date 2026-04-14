@@ -1,15 +1,14 @@
-const {RGBA_REGEX} = require('../constants/regex')
+import { RGBA_REGEX } from '../constants/regex'
+import { between } from './math'
 
-const {between} = require('./math')
+export const isRgbaShortString = rgbaString => RGBA_REGEX.SHORT.test(rgbaString)
 
-const isRgbaShortString = rgbaString => RGBA_REGEX.SHORT.test(rgbaString)
-
-const isRgbaLongString = rgbaString => RGBA_REGEX.LONG.test(rgbaString)
+export const isRgbaLongString = rgbaString => RGBA_REGEX.LONG.test(rgbaString)
 
 /**
  * Accepts a string like this 'rgba(N, N, N, A)' or 'N, N, N, A'
  */
-const isRgbaString = rgbaString => {
+export function isRgbaString(rgbaString) {
   const isShort = isRgbaShortString(rgbaString)
   const isLong = isRgbaLongString(rgbaString)
 
@@ -20,7 +19,7 @@ const isRgbaString = rgbaString => {
 /**
  * Accepts a string like this 'rgba(N, N, N, A)' or 'N, N, N, A' with N numeric values between 0 and 255, A numeric values between 0 and 1
  */
-const isRgba = rgba => {
+export function isRgba(rgba) {
   if (!isRgbaString(rgba)) return false
 
   const isShort = isRgbaShortString(rgba)
@@ -35,7 +34,7 @@ const isRgba = rgba => {
 /**
  * Convert 'rgba(N, N, N, A)' to [N, N, N, A]
  */
-const rgbaLongStringFormat = rgbaString => {
+export function rgbaLongStringFormat(rgbaString) {
   return rgbaString
     .replace('rgba', '')
     .replace('(', '')
@@ -47,15 +46,6 @@ const rgbaLongStringFormat = rgbaString => {
 /**
  * Convert 'N, N, N, A' to [N, N, N, A]
  */
-const rgbaShortStringFormat = rgbaString => {
+export function rgbaShortStringFormat(rgbaString) {
   return rgbaString.split(',').map(n => Number(n.trim()))
-}
-
-module.exports = {
-  isRgbaShortString,
-  isRgbaLongString,
-  isRgbaString,
-  isRgba,
-  rgbaLongStringFormat,
-  rgbaShortStringFormat,
 }

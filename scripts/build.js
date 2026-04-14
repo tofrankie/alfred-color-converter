@@ -1,25 +1,29 @@
-const path = require('node:path')
-const fs = require('node:fs')
-const {promisify} = require('node:util')
+import { Buffer } from 'node:buffer'
+import fs from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { promisify } from 'node:util'
+import AdmZip from 'adm-zip'
 
-// eslint-disable-next-line import/no-extraneous-dependencies
-const AdmZip = require('adm-zip')
+const pkg = JSON.parse(fs.readFileSync(new URL('../package.json', import.meta.url), 'utf8'))
 
-const pkg = require('../package.json')
-
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 const readFileAsync = promisify(fs.readFile)
 
-;(async function main() {
+main()
+
+async function main() {
   const zip = new AdmZip()
 
   zip.addLocalFile(path.join(__dirname, '../src/asserts/hex.png'))
   zip.addLocalFile(path.join(__dirname, '../src/asserts/rgb.png'))
   zip.addLocalFile(path.join(__dirname, '../src/asserts/icon.png'))
-  zip.addLocalFile(path.join(__dirname, '../dist/bundle.js'))
+  zip.addLocalFile(path.join(__dirname, '../dist/bundle.cjs'))
   zip.addFile('info.plist', await fillInfoPlist())
 
   zip.writeZip(`${pkg.name}.alfredworkflow`)
-})()
+}
 
 async function fillInfoPlist() {
   const infoPlistPath = path.join(__dirname, '../src/info.plist')
